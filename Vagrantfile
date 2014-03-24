@@ -4,7 +4,7 @@
 # Setting this to false will not install the LiveRebel agents automatically
 # note that it will also not start the service scripts since these have been
 # modified for the assumption that the agents are correctly installed.
-@lr_install_agents = true
+@lr_install_agents = false
 
 # If needed, the IP addresses used can be changed below.
 @lr_subnet = "10.127.128"
