@@ -147,6 +147,36 @@ Vagrant.configure("2") do |config|
   config.vm.define :jboss2 do |config|
     chef_jboss(config, @lr_ip_jboss2, 2)
   end
+
+  config.vm.define :liverebel-lb do |config|
+    config.vm.provision :chef_solo do |chef|
+      chef_config(chef)
+      chef_hosts_config(chef)
+      chef.add_recipe "liverebel-cluster-node"
+      chef_cluster_config(chef, @lr_ip_compositecluster)
+      chef.json.deep_merge!({
+        :cluster => {
+          :phpsessionid => "BALANCEID",
+          :javasessionid => "JSESSIONID|jsessionid",
+          :phpnodeport => 9090,
+          :javanodeport => 8080,
+          :nodes => [@lr_ip_composite1, @lr_ip_composite2]
+        }
+      })
+    end
+    end
+  end
+
+  config.vm.define :liverebel-node do |config|
+    config.vm.provision :chef_solo do |chef|
+      chef_config(chef)
+      chef_hosts_config(chef)
+        chef_config(chef)
+        chef_hosts_config_composite(chef)
+        chef_php_config(chef, ipAddress, identifier)
+        chef_tomcat_config(chef, ipAddress, identifier)
+    end
+  end
 end
 
 def chef_config(chef)
